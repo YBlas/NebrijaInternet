@@ -10,3 +10,4 @@ const niNumerito:number = 55;
 
 console.log(niNumerito);
 
+console.log(miVariable);
