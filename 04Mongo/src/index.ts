@@ -1,6 +1,9 @@
 import express from "express";
 import { connectMongoDB } from "./mongo";
 import routerPersonas from "./routes";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 connectMongoDB();
 
