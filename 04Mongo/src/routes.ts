@@ -7,8 +7,17 @@ const coleccion = () => getDb().collection("PruebaTarde");
 
 router.get("/", async (req, res) => {
   try {
-    const personas = await coleccion().find().toArray();
-    res.json(personas);
+    const page = Number(req.query?.page) || 1;
+    const limit = Number(req.query?.limit) || 2;
+    const skip = (page - 1) * limit;
+    const personas = await coleccion().find().skip(skip).limit(limit).toArray();
+    res.json({
+      info: {
+        page: page,
+        numberOfPeopleInPage: limit,
+      },
+      result: personas,
+    });
   } catch (err) {
     res.status(404).json(err);
   }
@@ -52,6 +61,15 @@ router.post(`/`, async (req, res) => {
   }
 });
 
+router.post(`/multiple`, async (req, res) => {
+  try {
+    const result = await coleccion().insertMany(req.body.people);
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 router.put("/:id", async (req, res) => {
   try {
     const result = await coleccion().updateOne(
@@ -61,6 +79,70 @@ router.put("/:id", async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(404).json(err);
+  }
+});
+
+router.post("/setAllAges", async (_req, res) => {
+  try {
+    const result = await coleccion().updateMany(
+      {},
+      {
+        $set: {
+          age: 33,
+        },
+      }
+    );
+    console.log(result);
+    res.json(result);
+  } catch (err) {
+    res.status(404).json(err);
+  }
+});
+
+router.post("/setAllFriends", async (req, res) => {
+  try {
+    const result = await coleccion().updateMany(
+      {},
+      {
+        $set: {
+          friends: ["Paco", "Pepa", "Pepe"],
+        },
+      }
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(404).json(err);
+  }
+});
+
+router.put("/noFriends/:age", async (req, res) => {
+  try {
+    const ageParam = Number(req.params.age);
+
+    const result = await coleccion().updateMany(
+      {
+        age: { $gt: ageParam },
+      },
+      {
+        $set: { friends: [] },
+      }
+    );
+
+    res.json(result);
+  } catch (err) {
+    res.status(404).json(err);
+  }
+});
+
+router.delete("/ageEqual/:age", async (req, res) => {
+  try {
+    const result = await coleccion().deleteMany({
+      age: { $eq: Number(req.params.age) },
+    });
+
+    res.json(result);
+  } catch (err) {
+    res.status(400).json(err);
   }
 });
 
