@@ -6,6 +6,7 @@ export const typeDefs = gql`
   type User {
     _id: ID!
     email: String!
+    videoGameLibrary: [VideoGame]!
   }
 
   type VideoGame {
@@ -25,5 +26,6 @@ export const typeDefs = gql`
     addVideoGame(name: String!, platform: String!, date: String!): VideoGame!
     register(email: String!, password: String!): String!
     login(email: String!, password: String!): String!
+    addVideoGameToMyLibrary(videoGameId: ID!): User!
   }
 `;
