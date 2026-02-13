@@ -1,0 +1,18 @@
+
+
+
+.mainContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 8px;
+    border: solid 2px #CCCC;
+}
+
+
+.characterDataContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 15px 6px 0px;
+}
