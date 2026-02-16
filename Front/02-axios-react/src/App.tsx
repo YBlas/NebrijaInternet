@@ -7,13 +7,27 @@ import { api } from "./api/api";
 
 const App = () => {
   const [characters, setCharacters] = useState<CharacterT[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [name, setName] = useState<string>("");
   const [finalName, setFinalName] = useState<string>("");
 
+
+  const fetchCharacters = async (name: string) => {
+    setLoading(true);
+    await api
+      .get(`/character/${name ? "?name=" + name : ""}`)
+      .then((e) => setCharacters(e.data.results))
+      .catch((e) => {
+        setError(`Error al obtener los datos: ${e}`);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    api
-      .get(`/character/${finalName ? "?name=" + finalName : ""}`)
-      .then((e) => setCharacters(e.data.results));
+    fetchCharacters(finalName);
   }, [finalName]);
 
   return (
@@ -31,9 +45,10 @@ const App = () => {
       >
         Search
       </button>
-      {characters.map((e) => (
-        <Character key={e.id} character={e} />
-      ))}
+      {loading && <h2>Loading...</h2>}
+      {error && <h3>Error: {error}</h3>}
+      {!loading &&
+        characters.map((e) => <Character key={e.id} character={e} />)}
     </>
   );
 };
