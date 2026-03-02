@@ -1,0 +1,23 @@
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 70px;
+  min-height: 100vh;
+}
+
+.lista{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.elementoLista:hover {
+  color: red;
+  text-decoration: line-through;
+}
+
+.elementoLista {
+  cursor: pointer;
+}
