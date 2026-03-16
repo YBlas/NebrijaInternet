@@ -1,0 +1,22 @@
+
+
+
+.container {
+    background-color: rgba(0,0,0,0.8);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.innerContainer {
+    width: 40%;
+    min-height: 200px;
+    border-radius: 15px;
+    padding: 15px;
+    background-color: #FFFFFF;
+}
