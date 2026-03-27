@@ -27,7 +27,9 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <ListaProvider>
-          {children}
+          <div className="bordeToFeo">
+            {children}
+          </div>
         </ListaProvider>
         </body>
     </html>

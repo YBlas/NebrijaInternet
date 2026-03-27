@@ -47,3 +47,10 @@ a {
     color-scheme: dark;
   }
 }
+
+
+.bordeToFeo {
+  padding: 25px;
+  background-color: #FABADA;
+  min-height: 100vh;
+}
