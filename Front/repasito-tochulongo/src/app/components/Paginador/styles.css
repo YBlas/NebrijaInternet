@@ -1,0 +1,34 @@
+
+
+.PaginadorContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+}
+
+.PaginadorContainer h1 {
+
+}
+
+.arrowContainer{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    transition: transform 1s;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrowContainer p {
+    font-size: 20px;
+}
+
+.arrowContainer:hover {
+    transform: scale(1.2);
+}

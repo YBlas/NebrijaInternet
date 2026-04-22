@@ -1,0 +1,29 @@
+
+
+.NavigatorContainer {
+
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+}
+
+.NavigatorLink {
+    padding: 7px;
+    background-color: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 1s;
+}
+
+.NavigatorLink:hover {
+    background-color: rgb(139, 139, 139);
+}
