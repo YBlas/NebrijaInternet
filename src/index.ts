@@ -115,6 +115,94 @@ app.post("/films", (req,res)=>{
 })
 
 
+app.put("/films/:id",(req,res)=>{
+
+    const id = Number(req.params.id);
+
+    if(!req.body){
+        res.status(400).json({
+            message: "This is a post creation endpoint, you must send a body"
+        })
+        return
+    }
+    
+    if(!req.body.name){
+        res.status(400).json({
+            message: "The 'name' parameter has not been defined"
+        })
+        return
+    }
+
+    if(!req.body.runtime){
+        res.status(400).json({
+            message: "The 'runtime' parameter has not been defined"
+        });
+        return
+    }
+
+    const peliculaAactualizar = peliculas.find((x)=>x.id===id);
+
+    if(!peliculaAactualizar){
+        res.status(404).json({
+            message: "Esa peli no existe manoli"
+        })
+    }
+
+    const cambioPeli: PeliculaT = {
+        id,
+        name: req.body.name,
+        runtime: req.body.runtime
+    }
+
+    peliculas = peliculas.map((x)=>x.id===id?cambioPeli:x);
+
+    res.json({
+        message: `La película con id ${id} ha sido actualizada`
+    })
+
+})
+
+app.patch("/films/:id", (req,res)=>{
+
+    const id = Number(req.params.id);
+
+    if(!req.body){
+        res.status(400).json({
+            message: "This is a post creation endpoint, you must send a body"
+        })
+        return
+    }
+
+    if(!(req.body.name || req.body.runtime)){
+        res.status(400).json({
+            message: "No values to change"
+        })
+    }
+
+    const peliculaAactualizar = peliculas.find((x)=>x.id===id);
+
+    if(!peliculaAactualizar){
+        res.status(404).json({
+            message: "Esa peli no existe manoli"
+        })
+        return
+    }
+
+    const peliActualizada : PeliculaT = {
+        ...peliculaAactualizar,
+        name: req?.body?.name ? req.body.name : peliculaAactualizar.name,
+        runtime: req?.body?.runtime ? req.body.runtime : peliculaAactualizar.runtime
+    }
+
+    peliculas = peliculas.map((x)=>x.id===id?peliActualizada:x);
+
+    res.json({
+        message: `Peli ${peliculaAactualizar.name} ha sido actualizada`
+    })
+
+});
+
+
 const PORT = 6969;
 
 app.listen(PORT, ()=>{
