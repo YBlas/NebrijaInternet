@@ -10,6 +10,6 @@ app.use(express.json());
 
 app.use("/films",filmsRoutes);
 
-app.listen(3000, ()=>{
-    console.log("Api funcionando en el puerto 300")
+app.listen(3001, ()=>{
+    console.log("Api funcionando en el puerto 3000")
 })

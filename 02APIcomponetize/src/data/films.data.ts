@@ -19,3 +19,7 @@ export let films: FilmT[] = [
         runtime: 112
     }
 ]
+
+export const changeFilms = (filmsParam:FilmT[]) => {
+    films=filmsParam
+}
