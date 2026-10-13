@@ -54,3 +54,25 @@ export const deleteFilm = (
         })
     }
 }
+
+export const changeFilm = (
+    req: Request,
+    res: Response
+)=>{
+    const id = Number(req.params.id);
+
+    const film = findFilm(id,res);
+
+    if(film){
+        const updatedFilm = {...film,...req.body};
+        changeFilms(films.map(x=>x.id===id?updatedFilm:x));
+        res.json({
+            message: "Película actualizada",
+            film: updatedFilm
+        })
+    }else{
+        res.status(400).json({
+            message: "No se pudo actualizar"
+        })
+    }
+}
