@@ -15,7 +15,13 @@ export const getFilms = (
     req: Request,
     res: Response
 ) => {
-    // res.json(films);
+    peliculasCollection.find().toArray().then((films)=>{
+        res.json(films)
+    }).catch(()=>{
+        res.status(500).json({
+            message: "Petó la llamada"
+        })
+    })
 }
 
 
@@ -30,6 +36,7 @@ export const getFilmWithID = (
         res.status(400).json({
             message: "Invalid ID"
         })
+        return
     }
 
     peliculasCollection.findOne({
@@ -80,18 +87,35 @@ export const deleteFilm = (
 )=>{
     const id = String(req.params.id);
 
-    const film = findFilm(id,res);
+    if(!ObjectId.isValid(id)){
+        res.status(400).json({
+            message: "Invalid ID"
+        })
+        return
+    }
 
-    // if(film){
-    //     changeFilms(films.filter(x=>x.id!==id));
-    //     res.json({
-    //         message: "Película eliminada"
-    //     })
-    // }else{
-    //     res.status(400).json({
-    //         message: "No se puedo eliminar"
-    //     })
-    // }
+
+    peliculasCollection.deleteOne({
+        _id: new ObjectId(id)
+    }).then((result)=>{
+        if(result.deletedCount === 0){
+            res.status(404).json({
+                message: "Película no eliminada"
+            })
+            return
+        }
+
+        res.json({
+            message: "Película eliminada correctamente"
+        })
+    }).catch(()=>{
+        res.status(500).json({
+            message: "Se lió la picha eliminando"
+        })
+    })
+
+
+    
 }
 
 export const changeFilm = (
@@ -100,18 +124,35 @@ export const changeFilm = (
 )=>{
     const id = String(req.params.id);
 
-    const film = findFilm(id,res);
+    if(!ObjectId.isValid(id)){
+        res.status(400).json({
+            message: "Invalid ID"
+        })
+        return
+    }
 
-    // if(film){
-    //     const updatedFilm = {...film,...req.body};
-    //     changeFilms(films.map(x=>x.id===id?updatedFilm:x));
-    //     res.json({
-    //         message: "Película actualizada",
-    //         film: updatedFilm
-    //     })
-    // }else{
-    //     res.status(400).json({
-    //         message: "No se pudo actualizar"
-    //     })
-    // }
+    const peliActualizada:FilmT = {
+        name: req.body.name,
+        runtime: req.body.runtime
+    }
+
+    peliculasCollection.replaceOne({
+        _id: new ObjectId(id)
+    }, peliActualizada).then((result)=>{
+        if(result.matchedCount === 0){
+            res.status(404).json({
+                message: "Película no encontrada"
+            })
+            return
+        }
+
+        res.json({
+            _id: new ObjectId(id),
+            ...peliActualizada
+        })
+    }).catch(()=>{
+        res.status(500).json({
+            message: "Se lió cambiando"
+        })
+    })
 }
