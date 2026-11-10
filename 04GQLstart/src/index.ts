@@ -58,6 +58,25 @@ const peliculas: FilmT[] = [
                 roles: ["Morpheus"]
             }
         ]
+    },{
+        _id: "3",
+        name: "Interstellar",
+        director: "Christopher Nolan",
+        runtime: 169,
+        year: 2014,
+        recordingFormat: ["IMAX", "35mm"],
+        cast: [
+            {
+                name: "Matthew McConaughey",
+                sex: "Male",
+                roles: ["Cooper"]
+            },
+            {
+                name: "Anne Hathaway",
+                sex: "Female",
+                roles: ["Brand"]
+            }
+        ]
     }
 ];
 
@@ -80,16 +99,55 @@ const typeDefs = `#graphql
         cast: [Cast!]!
     }
 
+    input CastInput {
+        name: String!,
+        sex: String!,
+        roles: [String!]!
+    }
+
+    input PeliculaInput {
+        name: String!,
+        director: String!,
+        runtime: Int!,
+        year: Int!,
+        recordingFormat: [String!]!,
+        cast: [CastInput!]!
+    }
+
     type Query {
         peliculas: [Pelicula!]!
+        pelicula(id: ID!): Pelicula
+        peliculasPorDirector(director: String!): [Pelicula!]!
+    }
+
+    type Mutation {
+        crearPelicula(input: PeliculaInput!): Pelicula!
     }
 `
 
 
 const resolvers = {
     Query:{
-        peliculas: () => peliculas
+        peliculas: () => peliculas,
+        pelicula: (_: unknown, args: { id: string}) => {
+            const { id } = args;
+            return peliculas.find(peli => peli._id === id);
+        },
+        peliculasPorDirector: (_:unknown, args: { director: string}) => {
+            const { director } = args;
+            return peliculas.filter(peli=> peli.director === director)
+        }
     },
+    Mutation:{
+        crearPelicula: (_:unknown, args: { input : FilmT }) => {
+            const nuevaPelicula: FilmT = {
+                _id: String(peliculas.length+1),
+                ...args.input
+            };
+            peliculas.push(nuevaPelicula);
+            return nuevaPelicula
+        }
+    }
 };
 
 
