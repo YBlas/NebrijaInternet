@@ -17,8 +17,17 @@ type FilmT = {
     cast: CastT[]
 }
 
+type FilmPatchT = {
+    name?: string,
+    director?: string,
+    runtime?: number,
+    year?: number,
+    recordingFormat?: string[],
+    cast?: CastT[]
+}
 
-const peliculas: FilmT[] = [
+
+let peliculas: FilmT[] = [
     {
         _id: "1",
         name: "Inception",
@@ -114,6 +123,15 @@ const typeDefs = `#graphql
         cast: [CastInput!]!
     }
 
+    input PeliculaChangeInput {
+        name: String,
+        director: String,
+        runtime: Int,
+        year: Int,
+        recordingFormat: [String!],
+        cast: [CastInput!]
+    }
+
     type Query {
         peliculas: [Pelicula!]!
         pelicula(id: ID!): Pelicula
@@ -122,6 +140,9 @@ const typeDefs = `#graphql
 
     type Mutation {
         crearPelicula(input: PeliculaInput!): Pelicula!
+        actualizarPelicula(id: ID!, input: PeliculaInput!): Pelicula
+        cambiarPelicula(id: ID!, input: PeliculaChangeInput!): Pelicula
+        eliminarPelicula(id: ID!): Pelicula
     }
 `
 
@@ -146,6 +167,68 @@ const resolvers = {
             };
             peliculas.push(nuevaPelicula);
             return nuevaPelicula
+        },
+        actualizarPelicula: (_:unknown, args: { id: string, input: FilmT}) => {
+
+            const peliculaAactualizar = peliculas.find(peli => peli._id === args.id);
+
+            if(!peliculaAactualizar){
+                return null;
+            }
+
+            const nuevoArrayDePeliculas = peliculas.map((peli)=>{
+                if(peli._id !== args.id){
+                    return peli
+                } else {
+                    return {
+                        _id: args.id,
+                        ...args.input
+                    }
+                }
+            });
+
+            peliculas = nuevoArrayDePeliculas;
+
+            return {
+                _id: args.id,
+                ...args.input
+            }
+        },
+        cambiarPelicula: (_:unknown, args: { id: string, input: FilmPatchT}) => {
+            const peliculaAactualizar = peliculas.find(peli => peli._id === args.id);
+
+            if(!peliculaAactualizar){
+                return null;
+            }
+
+            const nuevoArrayDePeliculas = peliculas.map((peli)=>{
+                if(peli._id !== args.id){
+                    return peli
+                } else {
+                    return {
+                        ...peliculaAactualizar,
+                        ...args.input
+                    }
+                }
+            });
+
+            peliculas = nuevoArrayDePeliculas;
+
+            return {
+                ...peliculaAactualizar,
+                ...args.input
+            }
+        },
+        eliminarPelicula: (_:unknown, args: {id: string}) => {
+            const peliculaAElminar = peliculas.find(peli => peli._id === args.id);
+
+            if (!peliculaAElminar) return null;
+
+            const nuevoArray = peliculas.filter(x => x._id !== args.id);
+
+            peliculas = nuevoArray;
+
+            return peliculaAElminar;
         }
     }
 };
