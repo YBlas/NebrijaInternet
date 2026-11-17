@@ -1,4 +1,5 @@
 import { getPeliculasCollection } from "../config/db";
+import { ObjectId, type Collection } from "mongodb";
 import type { FilmPatchT, FilmT } from "../models/types";
 
 export const resolvers = {
@@ -9,8 +10,9 @@ export const resolvers = {
             return await collection.find().toArray();
         },
         pelicula: (_: unknown, args: { id: string}) => {
-            const { id } = args;
-            return []
+            const id = new ObjectId(args.id);
+            const collection = getPeliculasCollection();
+            return collection.findOne({ _id: id });
         },
         peliculasPorDirector: (_:unknown, args: { director: string}) => {
             const { director } = args;

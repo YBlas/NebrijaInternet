@@ -1,3 +1,5 @@
+import type { ObjectId } from "mongodb";
+
 export type CastT = {
     name: string,
     sex: string,
@@ -5,7 +7,7 @@ export type CastT = {
 }
 
 export type FilmT = {
-    _id?:string,
+    _id?:ObjectId,
     name: string,
     director: string,
     runtime: number,
